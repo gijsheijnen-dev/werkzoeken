@@ -67,7 +67,7 @@ Als hosting geen aparte webroot toelaat: zet de niet-publieke mappen dicht met `
 
 ## Voorgesteld datamodel
 - `companies` (id, name, …)
-- `vacancies` (id, company_id FK, title, description, location, contact_name, contact_email/phone, created_at), met indexen op `title` en `location`, eventueel FULLTEXT.
+- `vacancies` (id, company_id FK, title, description, location, contact_name, contact_email/phone, created_at), met indexen op `title`, en `location`, eventueel FULLTEXT.
 - `applications` (id, vacancy_id FK, name, email, motivation, cv_path, cv_original_name, created_at)
 - InnoDB, `utf8mb4_unicode_ci`, foreign keys.
 
@@ -76,4 +76,5 @@ Als hosting geen aparte webroot toelaat: zet de niet-publieke mappen dicht met `
 - Code en identifiers in het Engels, UI-teksten in het Nederlands, comments in het Nederlands maar consistent.
 - Maak gebruik van SOLID design principes;
 - Voeg bij het opleveren een README toe met setup-instructies (schema + seed importeren, `.env` invullen) en de online URL.
-- Stel per story een implementatieplan op in kleine logische delen. Begin nooit zelf aan een implementatie. Ik moet altijd toestemming geven om te starten met implementeren;
+- Stel per story een implementatieplan op in kleine logische delen. Begin nooit zelf aan een implementatie. Ik moet altijd toestemming geven om te starten met implementeren; Wanneer we naar een volgende stap gaan, leg dan eerst even in 1 zin uit wat die volgende stap ook weer was.
+- Werk met strict typing in alle PHP bestanden;
