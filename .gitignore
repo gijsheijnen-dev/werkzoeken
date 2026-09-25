@@ -1,2 +1,5 @@
+#geen .env bestanden in de repo, want hierin staan security keys en wachtwoorden
 .env
+
+#.idea map hoort bij phpstorm, dus niet in de repo
 .idea/
