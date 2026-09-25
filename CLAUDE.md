@@ -67,7 +67,7 @@ Als hosting geen aparte webroot toelaat: zet de niet-publieke mappen dicht met `
 
 ## Voorgesteld datamodel
 - `companies` (id, name, …)
-- `vacancies` (id, company_id FK, title, description, location, contact_name, contact_email/phone, created_at), met indexen op `title` en `location`, eventueel FULLTEXT.
+- `vacancies` (id, company_id FK, title, description, location, contact_name, contact_email/phone, created_at), met indexen op `title`, en `location`, eventueel FULLTEXT.
 - `applications` (id, vacancy_id FK, name, email, motivation, cv_path, cv_original_name, created_at)
 - InnoDB, `utf8mb4_unicode_ci`, foreign keys.
 
