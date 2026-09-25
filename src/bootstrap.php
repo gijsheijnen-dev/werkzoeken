@@ -6,6 +6,8 @@ use App\Config\Env;
 use App\Http\ErrorHandler;
 use App\Http\SecurityHeaders;
 
+require __DIR__ . '/helpers.php';
+
 spl_autoload_register(static function (string $class): void {
     $prefix = 'App\\';
 
