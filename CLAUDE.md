@@ -77,3 +77,4 @@ Als hosting geen aparte webroot toelaat: zet de niet-publieke mappen dicht met `
 - Maak gebruik van SOLID design principes;
 - Voeg bij het opleveren een README toe met setup-instructies (schema + seed importeren, `.env` invullen) en de online URL.
 - Stel per story een implementatieplan op in kleine logische delen. Begin nooit zelf aan een implementatie. Ik moet altijd toestemming geven om te starten met implementeren;
+- Werk met strict typing in alle PHP bestanden;
