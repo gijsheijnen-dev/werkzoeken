@@ -68,3 +68,35 @@ sudo chmod 2770 storage/uploads
 - De `2` (setgid) zorgt dat nieuwe bestanden ook de groep `www-data` krijgen.
 
 Draait PHP bij de hostingpartij onder dezelfde gebruiker als de eigenaar van de bestanden, dan is `chmod 700 storage/uploads` voldoende.
+
+## Beheer
+
+Ingestuurde sollicitaties zijn te bekijken in een afgeschermd beheergedeelte op `/beheer/` (lokaal: `http://werkzoeken.local/beheer/`). Er staat bewust geen link naar deze pagina op de publieke site.
+
+### Inloggen
+`story4b.sql` maakt één beheeraccount aan:
+
+| Gebruikersnaam | Wachtwoord         |
+|----------------|--------------------|
+| `guest`        | `@$YxoAeDN6SKesG#` |
+
+Het wachtwoord staat in de database alleen als bcrypt-hash (`password_hash`). De gebruikersnaam is niet hoofdlettergevoelig, het wachtwoord wel.
+
+### Wat je ziet
+- Alle sollicitaties, nieuwste eerst: datum, vacature en bedrijf, naam, e-mailadres, de eerste 100 tekens van de motivatie en een knop om het CV te downloaden.
+- CV's worden alleen aan ingelogde beheerders uitgeleverd, via `/beheer/cv.php`. De bestanden zelf staan buiten de webroot.
+
+### Beveiliging
+- **Inlogbeperking:** na 5 mislukte inlogpogingen binnen 15 minuten wordt het IP-adres 15 minuten geblokkeerd, ook voor het juiste wachtwoord. Een geslaagde inlog wist de mislukte pogingen van dat IP-adres.
+- **Automatisch uitloggen:** na 30 minuten zonder activiteit moet je opnieuw inloggen.
+- **Sessie:** bij inloggen en uitloggen krijgt de sessie een nieuw ID. Uitloggen kan alleen via de uitlogknop (POST met CSRF-token).
+
+### IP-adres vrijgeven
+Is een IP-adres geblokkeerd, dan kan het direct worden vrijgegeven door de mislukte pogingen te verwijderen:
+
+```bash
+set -a; . ./.env; set +a
+MYSQL_PWD="$DB_PASS" mysql -h "$DB_HOST" -P "$DB_PORT" -u "$DB_USER" "$DB_NAME" -e "DELETE FROM login_attempts WHERE ip_address = '127.0.0.1'"
+```
+
+Vervang `127.0.0.1` door het geblokkeerde IP-adres, of laat de `WHERE` weg om alle blokkades op te heffen.

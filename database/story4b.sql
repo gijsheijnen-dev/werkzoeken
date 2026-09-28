@@ -21,4 +21,4 @@ CREATE TABLE login_attempts (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO admins (username, password_hash) VALUES
-('guest', '$2y$10$gX69ka/9bUNULbgfhoQiNOs4RT78c7cls5xsb6SD7ErEV/HNCB9lu');
+('guest', '$2y$10$1o9PiuYr6eb353tVI5qXFeESIcm2/8rTMEUU73.wtZaS6JV3OzYNq');
