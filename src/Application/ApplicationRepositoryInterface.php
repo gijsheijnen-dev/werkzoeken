@@ -12,4 +12,6 @@ interface ApplicationRepositoryInterface
      * @return list<ApplicationOverview>
      */
     public function findAllForOverview(): array;
+
+    public function findCv(int $applicationId): ?StoredCv;
 }

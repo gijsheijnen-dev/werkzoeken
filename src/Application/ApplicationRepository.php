@@ -20,6 +20,8 @@ final readonly class ApplicationRepository implements ApplicationRepositoryInter
         INNER JOIN companies c ON c.id = v.company_id
         ORDER BY a.created_at DESC, a.id DESC';
 
+    private const SELECT_CV = 'SELECT cv_filename, cv_original_name FROM applications WHERE id = :id';
+
     public function __construct(private PDO $pdo)
     {
     }
@@ -44,5 +46,14 @@ final readonly class ApplicationRepository implements ApplicationRepositoryInter
         $statement = $this->pdo->query(self::SELECT_OVERVIEW);
 
         return array_map(ApplicationOverview::fromRow(...), $statement->fetchAll());
+    }
+
+    public function findCv(int $applicationId): ?StoredCv
+    {
+        $statement = $this->pdo->prepare(self::SELECT_CV);
+        $statement->execute(['id' => $applicationId]);
+        $row = $statement->fetch();
+
+        return $row === false ? null : StoredCv::fromRow($row);
     }
 }
