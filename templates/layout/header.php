@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self'">
     <title>Werkzoeken Asessement - Gijs Heijnen</title>
     <link rel="stylesheet" href="/assets/css/style.css">
 </head>
