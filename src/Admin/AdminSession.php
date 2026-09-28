@@ -10,6 +10,7 @@ use App\Http\Session;
 final class AdminSession
 {
     public const LOGIN_URL = '/beheer/inloggen.php';
+    public const OVERVIEW_URL = '/beheer/';
 
     public const IDLE_TIMEOUT_SECONDS = 30 * 60;
 
