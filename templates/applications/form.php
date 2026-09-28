@@ -6,7 +6,7 @@ use App\Application\ApplicationRules;
 
 ?>
 <form id="apply-form" class="apply-form" method="post" action="/solliciteer.php"
-      enctype="multipart/form-data" novalidate hidden
+      enctype="multipart/form-data" novalidate <?= $formErrors === [] ? 'hidden' : '' ?>
       data-max-cv-bytes="<?= ApplicationRules::MAX_CV_BYTES ?>"
       data-max-cv-megabytes="<?= ApplicationRules::MAX_CV_MEGABYTES ?>"
       data-cv-extension="<?= e(ApplicationRules::CV_EXTENSION) ?>">
@@ -19,34 +19,40 @@ use App\Application\ApplicationRules;
         <label for="apply-name">Naam</label>
         <input id="apply-name" name="name" type="text" autocomplete="name" required
                maxlength="<?= ApplicationRules::MAX_NAME_LENGTH ?>"
+               value="<?= e($oldInput['name'] ?? '') ?>"
+               <?= isset($formErrors['name']) ? 'aria-invalid="true"' : '' ?>
                aria-describedby="apply-name-error">
-        <p id="apply-name-error" class="field-error" aria-live="polite"></p>
+        <p id="apply-name-error" class="field-error" aria-live="polite"><?= e($formErrors['name'] ?? '') ?></p>
     </div>
 
     <div class="form-field">
         <label for="apply-email">E-mailadres</label>
         <input id="apply-email" name="email" type="email" autocomplete="email" required
                maxlength="<?= ApplicationRules::MAX_EMAIL_LENGTH ?>"
+               value="<?= e($oldInput['email'] ?? '') ?>"
+               <?= isset($formErrors['email']) ? 'aria-invalid="true"' : '' ?>
                aria-describedby="apply-email-error">
-        <p id="apply-email-error" class="field-error" aria-live="polite"></p>
+        <p id="apply-email-error" class="field-error" aria-live="polite"><?= e($formErrors['email'] ?? '') ?></p>
     </div>
 
     <div class="form-field">
         <label for="apply-cv">CV</label>
         <input id="apply-cv" name="cv" type="file" required
                accept="<?= e(ApplicationRules::CV_ACCEPT) ?>"
+               <?= isset($formErrors['cv']) ? 'aria-invalid="true"' : '' ?>
                aria-describedby="apply-cv-hint apply-cv-error">
         <p id="apply-cv-hint" class="field-hint">Alleen PDF, maximaal <?= ApplicationRules::MAX_CV_MEGABYTES ?> MB.</p>
-        <p id="apply-cv-error" class="field-error" aria-live="polite"></p>
+        <p id="apply-cv-error" class="field-error" aria-live="polite"><?= e($formErrors['cv'] ?? '') ?></p>
     </div>
 
     <div class="form-field">
         <label for="apply-motivation">Motivatie (optioneel)</label>
         <textarea id="apply-motivation" name="motivation" rows="5"
                   maxlength="<?= ApplicationRules::MAX_MOTIVATION_LENGTH ?>"
-                  aria-describedby="apply-motivation-hint apply-motivation-error"></textarea>
+                  <?= isset($formErrors['motivation']) ? 'aria-invalid="true"' : '' ?>
+                  aria-describedby="apply-motivation-hint apply-motivation-error"><?= e($oldInput['motivation'] ?? '') ?></textarea>
         <p id="apply-motivation-hint" class="field-hint">Maximaal <?= ApplicationRules::MAX_MOTIVATION_LENGTH ?> tekens.</p>
-        <p id="apply-motivation-error" class="field-error" aria-live="polite"></p>
+        <p id="apply-motivation-error" class="field-error" aria-live="polite"><?= e($formErrors['motivation'] ?? '') ?></p>
     </div>
 
     <p id="apply-status" class="form-status" role="status" aria-live="polite"></p>
