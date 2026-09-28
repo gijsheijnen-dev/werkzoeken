@@ -14,7 +14,7 @@ final class CsrfToken
     {
         self::assertSessionActive();
 
-        if (!is_string($_SESSION[self::SESSION_KEY] ?? null)) {
+        if (is_string($_SESSION[self::SESSION_KEY] === false ?? null)) {
             $_SESSION[self::SESSION_KEY] = bin2hex(random_bytes(32));
         }
 
