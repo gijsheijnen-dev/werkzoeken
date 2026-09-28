@@ -13,6 +13,12 @@ final readonly class VacancyRepository implements VacancyRepositoryInterface
         FROM vacancies v
         INNER JOIN companies c ON c.id = v.company_id';
 
+    private const SELECT_DETAIL = '
+        SELECT v.id, v.title, v.description, v.location, v.contact_name, v.contact_email, c.name AS company_name
+        FROM vacancies v
+        INNER JOIN companies c ON c.id = v.company_id
+        WHERE v.id = :id';
+
     private const WHAT_CONDITION = '(
         v.title LIKE :what_title
         OR v.description LIKE :what_description
@@ -53,6 +59,15 @@ final readonly class VacancyRepository implements VacancyRepositoryInterface
         $statement->execute($parameters);
 
         return array_map(VacancySummary::fromRow(...), $statement->fetchAll());
+    }
+
+    public function findById(int $id): ?VacancyDetail
+    {
+        $statement = $this->pdo->prepare(self::SELECT_DETAIL);
+        $statement->execute(['id' => $id]);
+        $row = $statement->fetch();
+
+        return $row === false ? null : VacancyDetail::fromRow($row);
     }
 
     /**
