@@ -40,8 +40,7 @@ final readonly class UploadedCv
 
     private static function isSingleUpload(array $file): bool
     {
-        return is_array($file)
-            && is_int($file['error'] ?? null)
+        return is_int($file['error'] ?? null)
             && is_string($file['tmp_name'] ?? null)
             && is_string($file['name'] ?? null);
     }
