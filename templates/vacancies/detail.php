@@ -17,7 +17,9 @@
         </p>
     </section>
 
-    <button type="button" id="apply-button">Solliciteer</button>
+    <button type="button" id="apply-button" aria-controls="apply-form" aria-expanded="false">Solliciteer</button>
+
+    <?php require dirname(__DIR__) . '/applications/form.php'; ?>
 </article>
 
 <script src="/assets/js/back-link.js" defer></script>
