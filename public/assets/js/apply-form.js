@@ -117,17 +117,25 @@ function initApplyForm() {
         openButton.setAttribute('aria-expanded', String(visible));
     }
 
+    function emptyFields(){
+        form.reset();
+    }
+
     openButton.addEventListener('click', () => {
         setFormVisible(form.hidden);
 
         if (form.hidden === false) {
             nameField.focus();
+            return;
         }
+
+        emptyFields();
     });
 
     cancelButton.addEventListener('click', () => {
         setFormVisible(false);
         validators.forEach(([field]) => showFieldError(field, ''));
+        emptyFields();
         openButton.focus();
     });
 
