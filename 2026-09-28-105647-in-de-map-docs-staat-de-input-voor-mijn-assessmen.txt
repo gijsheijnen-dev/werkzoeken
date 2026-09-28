@@ -1349,3 +1349,396 @@
   Zal ik daarmee beginnen?
 
 ✻ Worked for 12s · done Friday 1:01 PM
+
+❯ /export                                                                       
+  ⎿  Conversation exported to: /var/www/html/werkzoeken-assessment/2026-09-28-09
+     3416-in-de-map-docs-staat-de-input-voor-mijn-assessmen.txt
+
+❯ Een vraag: waarvoor wil je die VacancySummary DTO gaan gebruiken? Die doet nu 
+  namelijk nog niets.                                                           
+
+  Listed 1 directory, ran 1 shell command (ctrl+o to expand)
+
+● VacancySummary wordt al gebruikt: het is het object waarmee het
+  vacatureoverzicht uit story 01 elke vacature toont. Het werkt zo:
+
+  1. In de repository. VacancyRepository::search() zet elke databaserij om naar
+     een VacancySummary (src/Vacancy/VacancyRepository.php:55):
+  return array_map(VacancySummary::fromRow(...), $statement->fetchAll());
+  2. In de controller. public/index.php krijgt daardoor een list<VacancySummary>
+     terug in $vacancies.
+  3. In het template. templates/vacancies/list.php leest de properties van elk
+     object:
+  <?= e($vacancy->title) ?>
+  <?= e($vacancy->companyName) ?> &middot; <?= e($vacancy->location) ?>
+  sprintf('/vacature.php?id=%d', $vacancy->id)
+
+  Dat het lijkt alsof hij niets doet, komt waarschijnlijk doordat de templates
+  niet naar de class verwijzen. De class staat alleen genoemd in de repository
+  en in de docblock van de interface. Daarom ziet PhpStorm geen verband tussen
+  $vacancy en VacancySummary. Een /** @var list<VacancySummary> $vacancies */
+  bovenaan list.php maakt dat zichtbaar. Dat laat ik aan jou, omdat het een
+  comment is.
+
+  Waarom een DTO en geen losse arrays:
+  - Een vaste structuur. Het template weet precies welke velden er zijn. Een
+    typefout zoals $vacancy->titel geeft een fout, terwijl $row['titel'] stil
+    null geeft.
+  - Scheiding van lagen. De kolomnamen uit de database (company_name) blijven in
+    de repository. Het template werkt met companyName en merkt niets van een
+    wijziging in het schema.
+  - Een aparte class voor het overzicht. VacancySummary bevat alleen wat het
+    overzicht toont. De zwaardere VacancyDetail met omschrijving en
+    contactgegevens is voor de detailpagina. Het overzicht haalt zo geen 100
+    omschrijvingen op die het niet toont.
+
+  Zal ik doorgaan met stap 2, findById() in de repository?
+
+✻ Cooked for 15s · done 9:47 AM
+
+❯ Klopt. Ik zag geen usages PHP Storm vandaar. Ga door met stap 2.              
+
+● Stap 2 voegt findById(int $id): ?VacancyDetail toe aan de interface en de
+  repository, met een eigen prepared query.
+
+● Bash(python3 - <<'EOF'
+      p='src/Vacancy/VacancyRepositoryInterface.php'…)
+  ⎿   src/Vacancy/VacancyRepository.php          | 15 +++++++++++++++
+      src/Vacancy/VacancyRepositoryInterface.php |  2 ++
+      2 files changed, 17 insertions(+)
+     … +15 lines (ctrl+o to expand)
+  ⎿  Updated src/Vacancy/VacancyRepositoryInterface.php (+2 -0)
+      10       * @return list<VacancySummary>
+      11       */
+      12      public function search(VacancySearchCriteria $criteria): ar
+          ray;
+      13 +                                                               
+      14 +    public function findById(int $id): ?VacancyDetail;         
+      15  }
+  ⎿  Updated src/Vacancy/VacancyRepository.php (+15 -0)
+      13          FROM vacancies v
+      14          INNER JOIN companies c ON c.id = v.company_id';
+      15  
+      16 +    private const SELECT_DETAIL = '                            
+      17 +        SELECT v.id, v.title, v.description, v.location, v.cont
+         +act_name, v.contact_email, c.name AS company_name              
+      18 +        FROM vacancies v                                       
+      19 +        INNER JOIN companies c ON c.id = v.company_id          
+      20 +        WHERE v.id = :id';                                     
+      21 +                                                               
+      22      private const WHAT_CONDITION = '(
+      23          v.title LIKE :what_title
+      24          OR v.description LIKE :what_description
+     ...
+      61          return array_map(VacancySummary::fromRow(...), $stateme
+          nt->fetchAll());
+      62      }
+      63  
+      64 +    public function findById(int $id): ?VacancyDetail          
+      65 +    {                                                          
+      66 +        $statement = $this->pdo->prepare(self::SELECT_DETAIL); 
+      67 +        $statement->execute(['id' => $id]);                    
+      68 +        $row = $statement->fetch();                            
+      69 +                                                               
+      70 +        return $row === false ? null : VacancyDetail::fromRow($
+         +row);                                                          
+      71 +    }                                                          
+      72 +                                                               
+      73      /**
+      74       * @param list<string> $conditions
+      75       */
+
+● Stap 2 is klaar: findById() werkt en is getest tegen de database.
+
+  VacancyRepositoryInterface
+  - Nieuwe methode: findById(int $id): ?VacancyDetail.
+
+  VacancyRepository
+  - Een nieuwe constante SELECT_DETAIL. Die haalt alleen de velden op die de
+    detailpagina nodig heeft, met een JOIN op companies en WHERE v.id = :id.
+  - findById() voert de query uit als prepared statement met een gebonden :id.
+    Zonder resultaat geeft hij null, anders een VacancyDetail via fromRow().
+  - De methode doet bewust niets met ongeldige ID's zoals 0 of negatieve
+    getallen. Het valideren van invoer hoort bij de controller (stap 5). De
+    repository beantwoordt alleen de vraag of een vacature met dit ID bestaat.
+
+  Getest:
+  - php -l gaf geen fouten.
+  - findById(21) geeft een VacancyDetail met alle velden: "Online Marketeer",
+    Pixelpoort Media, Amsterdam, Yara El Idrissi met haar .example-adres. In de
+    omschrijving zijn de alinea-overgangen (\n\n) bewaard gebleven.
+  - findById() met 0, -1, 999999 en PHP_INT_MAX geeft null, zonder fouten.
+
+  PhpStorm toont nu ook usages van VacancyDetail, via
+  VacancyRepository::findById().
+
+  De volgende stap is stap 3: de 404-afhandeling met
+  templates/errors/not-found.php, zodat een ongeldig of onbekend ID een nette
+  "Vacature niet gevonden"-pagina geeft. Zal ik daarmee beginnen?
+
+✻ Baked for 16s · done 9:49 AM
+
+❯ Ga door met stap 3                                                            
+
+● Stap 3 maakt de 404-pagina templates/errors/not-found.php. De controller in
+  stap 5 gebruikt die bij een ongeldig of onbekend vacature-ID.
+
+● Bash(mkdir -p templates/errors && cat > templates/errors/not-found.php <<'EOF'
+      <?php declare(strict_types=1); ?>…)
+  ⎿  No syntax errors detected in templates/errors/not-found.php
+     <main>
+     <h1>Vacature niet gevonden</h1>
+     … +5 lines (ctrl+o to expand)
+  ⎿  Created templates/errors/not-found.php (+4 -0)
+      1 +<?php declare(strict_types=1); ?>                               
+      2 +<h1>Vacature niet gevonden</h1>                                 
+      3 +<p>Deze vacature bestaat niet of is niet meer beschikbaar.</p>  
+      4 +<a class="button" href="/">Bekijk alle vacatures</a>            
+
+● Stap 3 is klaar: templates/errors/not-found.php staat er.
+
+  - De pagina toont een <h1> "Vacature niet gevonden", een korte uitleg en een
+    knop "Bekijk alle vacatures" naar /. De knop gebruikt de bestaande
+    .button-class.
+  - Er zit geen dynamische inhoud in. Het opgevraagde ID wordt dus niet getoond,
+    en daarmee is er ook geen XSS-risico.
+  - php -l gaf geen fouten, en de pagina rendert goed tussen header en footer.
+
+  In deze stap wordt de pagina nog nergens gebruikt en wordt er nog geen
+  404-statuscode gestuurd. Dat gebeurt in stap 5 in public/vacature.php, met
+  http_response_code(404) bij een ongeldig of onbekend ID.
+
+  De volgende stap is stap 4: het template templates/vacancies/detail.php met de
+  volledige vacature, de contactpersoon met mailto:-link, de knop "Solliciteer"
+  en de terug-link met het history.back()-script. Zal ik daarmee beginnen?
+
+✻ Cooked for 12s · done 9:56 AM
+
+❯ Ga door met stap 4                                                            
+● Stap 4 maakt het template voor de detailpagina, met alle vacaturegegevens, de
+  contactpersoon met mailto:-link, de knop "Solliciteer" en een terug-link. Die
+  terug-link werkt via een klein extern script met history.back().
+
+● Bash(mkdir -p public/assets/js && cat > templates/vacancies/detail.php <<'EOF'
+      <?php declare(strict_types=1); ?>…)
+  ⎿  No syntax errors detected in templates/vacancies/detail.php
+     JS syntax OK
+     <a class="back-link" href="/">&larr; Terug naar overzicht</a>
+     … +25 lines (ctrl+o to expand)
+  ⎿  Created templates/vacancies/detail.php (+23 -0)
+       1 +<?php declare(strict_types=1); ?>                              
+       2 +<a class="back-link" href="/">&larr; Terug naar overzicht</a>  
+       3 +                                                               
+       4 +<article class="vacancy-detail">                               
+       5 +    <h1><?= e($vacancy->title) ?></h1>                         
+       6 +    <p class="vacancy-meta"><?= e($vacancy->companyName) ?> &mi
+         +ddot; <?= e($vacancy->location) ?></p>                         
+       7 +                                                               
+       8 +    <div class="vacancy-description">                          
+       9 +        <?= nl2br(e($vacancy->description)) ?>                 
+      10 +    </div>                                                     
+      11 +                                                               
+      12 +    <section class="vacancy-contact">                          
+      13 +        <h2>Contactpersoon</h2>                                
+      14 +        <p>                                                    
+      15 +            <?= e($vacancy->contactName) ?><br>                
+      16 +            <a href="mailto:<?= e($vacancy->contactEmail) ?>"><
+         +?= e($vacancy->contactEmail) ?></a>                            
+      17 +        </p>                                                   
+      18 +    </section>                                                 
+      19 +                                                               
+      20 +    <button type="button" id="apply-button">Solliciteer</button
+         +>                                                              
+      21 +</article>                                                     
+      22 +                                                               
+      23 +<script src="/assets/js/back-link.js" defer></script>          
+  ⎿  Created public/assets/js/back-link.js (+22 -0)
+       1 +'use strict';                                                  
+       2 +                                                               
+       3 +function cameFromOwnSite() {                                   
+       4 +    if (history.length < 2 || document.referrer === '') {      
+       5 +        return false;                                          
+       6 +    }                                                          
+       7 +                                                               
+       8 +    return new URL(document.referrer).origin === window.locatio
+         +n.origin;                                                      
+       9 +}                                                              
+      10 +                                                               
+      11 +function handleBackLinkClick(event) {                          
+      12 +    if (!cameFromOwnSite()) {                                  
+      13 +        return;                                                
+      14 +    }                                                          
+      15 +                                                               
+      16 +    event.preventDefault();                                    
+      17 +    history.back();                                            
+      18 +}                                                              
+      19 +                                                               
+      20 +document.querySelectorAll('.back-link').forEach((link) => {    
+      21 +    link.addEventListener('click', handleBackLinkClick);       
+      22 +});                                                            
+
+● Stap 4 is klaar: het template en het terug-script staan er, en alle testinvoer
+  met HTML werd geëscaped.
+
+  templates/vacancies/detail.php
+  - Bovenaan een link ← Terug naar overzicht (href="/", class back-link).
+  - De titel als <h1>, met daaronder bedrijf en locatie.
+  - De omschrijving met nl2br(e(...)). Er wordt eerst ge-escaped en daarna
+    worden pas <br>-tags toegevoegd, zodat de alinea's behouden blijven zonder
+    dat HTML uit de database wordt uitgevoerd.
+  - Een blok "Contactpersoon" met de naam en het e-mailadres als mailto:-link.
+    Dankzij het vaste mailto:-voorvoegsel kan er geen javascript:-URL in de link
+    terechtkomen.
+  - Een knop "Solliciteer" (type="button", id="apply-button"). Die doet nog
+    niets tot story 03.
+  - Het script wordt alleen op deze pagina geladen, met defer.
+
+  public/assets/js/back-link.js
+  - history.back() wordt alleen gebruikt als er een vorige pagina in de
+    geschiedenis staat én de referrer van onze eigen origin komt.
+  - In alle andere gevallen blijft het een gewone link naar /: bij een gedeelde
+    link, bij een nieuw tabblad via Ctrl-klik (dan is er wel een referrer, maar
+    geen geschiedenis) en als JS uit staat.
+  - Referrer-Policy: same-origin stuurt de referrer mee binnen de eigen site,
+    dus die check werkt.
+  - Het is een extern bestand, zodat het binnen de CSP default-src 'self' valt.
+
+  Getest:
+  - php -l en node --check gaven geen fouten.
+  - Het script wordt geserveerd als text/javascript met status 200.
+  - Titel, bedrijf, omschrijving, contactnaam en e-mail kregen invoer als
+    <script>, <b>, &, ", ' en een e-mail met "onmouseover=". In alle gevallen
+    werd het geëscaped.
+
+  Het gedrag van back-link.js heb ik nog niet in een browser getest. Dat kan
+  zodra de pagina bereikbaar is na stap 5.
+
+  De volgende stap is stap 5: de controller public/vacature.php. Die valideert
+  het ID met filter_input, stuurt bij een ongeldig of onbekend ID een 404 met de
+  not-found-pagina, en rendert anders de detailpagina. Zal ik daarmee beginnen?
+
+✻ Cogitated for 25s · done 9:58 AM
+
+❯ Ga door met stap 5                                                            
+
+● Stap 5 maakt de controller public/vacature.php. Die valideert het ID, haalt de
+  vacature op en rendert de detailpagina, of een 404 als het ID ongeldig of
+  onbekend is.
+
+● Write(public/vacature.php)
+  ⎿  Wrote 24 lines to public/vacature.php
+      1 <?php
+      2 
+      3 declare(strict_types=1);
+      4 
+      5 use App\Database\ConnectionFactory;
+      6 use App\Database\DatabaseConfig;
+      7 use App\Vacancy\VacancyRepository;
+      8 
+      9 $env = require dirname(__DIR__) . '/src/bootstrap.php';
+     … +17 lines (ctrl+o to expand)
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+● Stap 5 is klaar: de detailpagina werkt via Apache.
+
+  Wat public/vacature.php doet:
+  1. Het laadt de bootstrap.
+  2. Het valideert het ID met filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT,
+     ['options' => ['min_range' => 1]]). Een ongeldig ID wordt false en een
+     ontbrekend ID wordt null.
+  3. Alleen bij een geldig ID vraagt het de repository om de vacature. In alle
+     andere gevallen wordt $vacancy null.
+  4. Is $vacancy null, dan stuurt het http_response_code(404). Dat gebeurt vóór
+     de header, omdat een statuscode na de eerste output niet meer kan.
+  5. Daarna rendert het header, dan not-found.php of detail.php, en de footer.
+
+  Getest via werkzoeken.local:
+  - id=1, 21 en 100 geven een 200 met de juiste vacature. Alle velden staan
+    erin, de alinea's zijn bewaard en de mailto:-link is aanwezig.
+  - Deze ID's geven een 404 met "Vacature niet gevonden": ontbrekend, leeg, 0,
+    -1, abc, 1.5, 999999, id[]=1, 1 OR 1=1, 1', 0x15 en een getal groter dan
+    PHP_INT_MAX.
+  - Ik heb alle 100 "Bekijk vacature"-links uit het overzicht opgevraagd. Ze
+    geven allemaal een 200.
+
+  In de Apache-log staan twee "vacature.php not found"-fouten, van 09:56 en
+  10:01. Die zijn van vóór 10:03, toen ik het bestand aanmaakte. Waarschijnlijk
+  klikte je toen al op "Bekijk vacature". Sindsdien zijn er geen nieuwe fouten.
+
+  De volgende stap is stap 6: minimale CSS voor de detailpagina (terug-link,
+  metaregel, omschrijving en contactblok). Zal ik daarmee beginnen?
+
+✻ Baked for 24s · done 10:03 AM
+
+❯ Ga door met stap 6                                                            
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Stap 6 voegt minimale CSS toe voor de detailpagina.
+
+● Bash(cat >> public/assets/css/style.css <<'EOF'…)
+  ⎿  200
+     21
+  ⎿  Updated public/assets/css/style.css (+33 -0)
+       96      margin: 0.25rem 0 0.75rem;
+       97      color: #52606d;
+       98  }
+       99 +                                                              
+      100 +.back-link {                                                  
+      101 +    display: inline-block;                                    
+      102 +    margin-bottom: 1rem;                                      
+      103 +    color: #2563eb;                                           
+      104 +}                                                             
+      105 +                                                              
+      106 +.vacancy-detail {                                             
+      107 +    padding: 1.5rem;                                          
+      108 +    background: #fff;                                         
+      109 +    border: 1px solid #e4e7eb;                                
+      110 +    border-radius: 4px;                                       
+      111 +}                                                             
+      112 +                                                              
+      113 +.vacancy-detail h1 {                                          
+      114 +    margin: 0;                                                
+      115 +}                                                             
+      116 +                                                              
+      117 +.vacancy-meta {                                               
+      118 +    margin: 0.25rem 0 1.5rem;                                 
+      119 +    color: #52606d;                                           
+      120 +}                                                             
+      121 +                                                              
+      122 +.vacancy-contact {                                            
+      123 +    margin: 1.5rem 0;                                         
+      124 +    padding-top: 1rem;                                        
+      125 +    border-top: 1px solid #e4e7eb;                            
+      126 +}                                                             
+      127 +                                                              
+      128 +.vacancy-contact h2 {                                         
+      129 +    margin: 0 0 0.5rem;                                       
+      130 +    font-size: 1.125rem;                                      
+      131 +}                                                             
+
+● Stap 6 is klaar: onderaan public/assets/css/style.css staan vijf nieuwe regels
+  voor de detailpagina.
+
+  - .back-link: een blauwe link met wat ruimte eronder.
+  - .vacancy-detail: een witte kaart met padding, rand en afgeronde hoeken, net
+    als de kaarten in het overzicht.
+  - .vacancy-meta: bedrijf en locatie in grijs onder de titel.
+  - .vacancy-contact: gescheiden van de omschrijving door een lijn erboven, met
+    een kleinere h2.
+
+  Voor de knop "Solliciteer" was niets nieuws nodig, want die gebruikt al de
+  bestaande button-stijl. De omschrijving heeft ook geen eigen regel nodig,
+  omdat de <br>-tags de alinea's al scheiden.
+
+  De stylesheet wordt nog steeds geserveerd met een 200. Hoe het eruitziet heb
+  ik niet in een browser bekeken.
+
+  De volgende stap is stap 7: de tests van story 02. De 404-gevallen, de
+  XSS-escaping en de links vanuit het overzicht heb ik al getest bij stap 4 en
+  5. Wat nog openstaat is een check in de browser van de layout en van de
+  terug-link (history.back() vanaf het overzicht, en de fallback naar / bij een
+  directe link of een nieuw tabblad). Test je dat zelf, net als bij story 01?
+
+✻ Worked for 12s · done 10:10 AM
