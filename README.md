@@ -71,14 +71,14 @@ Draait PHP bij de hostingpartij onder dezelfde gebruiker als de eigenaar van de 
 
 ## Beheer
 
-Ingestuurde sollicitaties zijn te bekijken in een afgeschermd beheergedeelte op `/beheer/` (lokaal: `http://werkzoeken.local/beheer/`). Er staat bewust geen link naar deze pagina op de publieke site.
+Ingestuurde sollicitaties zijn te bekijken in een afgeschermd beheergedeelte op `/beheer/` (lokaal: `http://werkzoeken.local/beheer/`). De link "Sollicitaties" in de header van de site leidt naar de inlogpagina.
 
 ### Inloggen
 `story4b.sql` maakt één beheeraccount aan:
 
-| Gebruikersnaam | Wachtwoord         |
-|----------------|--------------------|
-| `guest`        | `@$YxoAeDN6SKesG#` |
+| Gebruikersnaam | Wachtwoord                       |
+|----------------|----------------------------------|
+| `guest`        | Wordt apart aan de assessors verstrekt |
 
 Het wachtwoord staat in de database alleen als bcrypt-hash (`password_hash`). De gebruikersnaam is niet hoofdlettergevoelig, het wachtwoord wel.
 
