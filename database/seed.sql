@@ -1,3 +1,5 @@
+-- de seeds van vacatures
+
 SET NAMES utf8mb4;
 
 INSERT INTO companies (id, name) VALUES

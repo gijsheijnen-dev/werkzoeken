@@ -6,6 +6,10 @@ namespace App\Admin;
 
 use PDO;
 
+/**
+ * Deze class houdt je loginpogingen bij in de database. Deze pogingen worden weer gewist op het moment dat je
+ * succesvol inlogt, of wanneer de blokkade periode is verlopen.
+ */
 final readonly class LoginAttemptRepository implements LoginAttemptRepositoryInterface
 {
     private const COUNT_SINCE = '

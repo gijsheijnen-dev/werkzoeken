@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Application;
 
+/**
+ * DTO met hierin de sollicitatie die gaat worden opgeslagen.
+ */
 final readonly class ApplicationSubmission
 {
     public function __construct(

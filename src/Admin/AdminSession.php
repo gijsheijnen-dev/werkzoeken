@@ -50,6 +50,11 @@ final class AdminSession
         return $admin['username'];
     }
 
+    /**
+     * deze methode wordt ingezet op pagina's waarvoor je ingelogd moet zijn.
+     * Hieronder valt ook het downloaden van de CV's die achter een login zitten.
+     * De rechtstreekse download link werkt dus niet als je niet bent ingelogd.
+     **/
     public static function requireLogin(): string
     {
         $username = self::currentUsername();
@@ -69,10 +74,15 @@ final class AdminSession
         session_regenerate_id(true);
     }
 
-    private static function isValidSessionData(mixed $admin): bool
+    /**
+     * Type = nullabel array, omdat een sessie niet altijd defined is.
+     *
+     * @param array|null $admin
+     * @return bool
+     */
+    private static function isValidSessionData(?array $admin): bool
     {
-        return is_array($admin)
-            && is_int($admin['id'] ?? null)
+        return is_int($admin['id'] ?? null)
             && is_string($admin['username'] ?? null)
             && is_int($admin['last_activity'] ?? null);
     }

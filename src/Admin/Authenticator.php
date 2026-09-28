@@ -15,6 +15,11 @@ final readonly class Authenticator
     public function attempt(string $username, #[\SensitiveParameter] string $password): ?Admin
     {
         $admin = $this->admins->findByUsername($username);
+
+        /**
+         * Er wordt altijd een password_verify uitgevoerd. Ook als de betreffende gebruiker niet wordt
+         * gevonden. Dit voorkomt dat je gebruikersnamen kunt achterhalen.
+         */
         $passwordMatches = password_verify($password, $admin?->passwordHash ?? self::DUMMY_HASH);
 
         if ($admin === null || $passwordMatches === false) {

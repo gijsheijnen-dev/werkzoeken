@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Vacancy;
 
-final readonly class VacancySummary
+final readonly class VacancyOverview
 {
     public function __construct(
         public int $id,

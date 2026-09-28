@@ -6,6 +6,7 @@ namespace App\Application;
 
 use DateTimeImmutable;
 
+//DTO voor de weergave van 1 rij op de overzichtspagina van de sollicitaties;
 final readonly class ApplicationOverview
 {
     public function __construct(

@@ -6,6 +6,7 @@ namespace App\Admin;
 
 use PDO;
 
+//repository die wordt gebruikt om de juiste user op te zoeken en de bijbehorende admin DTO terug te geven
 final readonly class AdminRepository implements AdminRepositoryInterface
 {
     private const SELECT_BY_USERNAME = 'SELECT id, username, password_hash FROM admins WHERE username = :username';

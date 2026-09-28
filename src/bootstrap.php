@@ -8,6 +8,7 @@ use App\Http\SecurityHeaders;
 
 require __DIR__ . '/helpers.php';
 
+//Simpele autoloader;
 spl_autoload_register(static function (string $class): void {
     $prefix = 'App\\';
 

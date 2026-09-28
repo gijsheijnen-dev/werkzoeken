@@ -6,9 +6,13 @@ namespace App\Database;
 
 use App\Config\Env;
 
+/**
+ * Deze class returned een valueObject die gebruikt wordt om de database connectie op te zetten.
+ * Via een private constructor dwingen we af dat hij alleen vanuit environment variabelen aangemaakt kan worden;
+ */
 final readonly class DatabaseConfig
 {
-    public function __construct(
+    private function __construct(
         public readonly string $host,
         public readonly int $port,
         public readonly string $name,

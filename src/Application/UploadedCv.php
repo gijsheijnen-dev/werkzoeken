@@ -7,6 +7,10 @@ namespace App\Application;
 use finfo;
 use RuntimeException;
 
+/**
+ * Class die de geuploaded CV valideert en vervolgens zichzelf returned, of een exception throwed
+ * als de pdf niet valide is.
+ */
 final readonly class UploadedCv
 {
     private const MAX_ORIGINAL_NAME_LENGTH = 255;

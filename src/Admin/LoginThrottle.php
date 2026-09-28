@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace App\Admin;
 
+/**
+ * Deze class wordt aangeroepen om blokkades aan te maken.
+ */
 final readonly class LoginThrottle
 {
     public const MAX_FAILED_ATTEMPTS = 5;
+
     public const WINDOW_MINUTES = 15;
 
     public function __construct(private LoginAttemptRepositoryInterface $attempts)

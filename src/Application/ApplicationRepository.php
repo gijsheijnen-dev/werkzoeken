@@ -6,6 +6,9 @@ namespace App\Application;
 
 use PDO;
 
+/**
+ * Repository met queries om sollicitaties (of delen daarvan) te verwerken;
+ */
 final readonly class ApplicationRepository implements ApplicationRepositoryInterface
 {
     private const INSERT = '

@@ -7,6 +7,10 @@ namespace App\Http;
 use ErrorException;
 use Throwable;
 
+/**
+ * Error handler om foutieve requests af te handelen en te loggen. Daarnaast zorgt deze error handler
+ * ervoor dat er geen stack traces en exceptions op je scherm komen in een productie omgeving (APP_ENV=production)
+ */
 final class ErrorHandler
 {
     private bool $showDetails = false;

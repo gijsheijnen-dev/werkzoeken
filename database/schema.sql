@@ -1,3 +1,5 @@
+-- Migratie om de database te setuppen. Inclusief username en wachtwoord.
+
 SET NAMES utf8mb4;
 
 DROP TABLE IF EXISTS applications;

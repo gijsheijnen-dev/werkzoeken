@@ -7,7 +7,7 @@ namespace App\Vacancy;
 interface VacancyRepositoryInterface
 {
     /**
-     * @return list<VacancySummary>
+     * @return list<VacancyOverview>
      */
     public function search(VacancySearchCriteria $criteria): array;
 

@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Application;
 
+/**
+ * Validator die een validatieresultaat teruggeeft. Wanneer de validatie correct is
+ * wordt de DTO met de ingevulde data pas doorgestuurd om te verwerken.
+ */
 final class ApplicationValidator
 {
     /**

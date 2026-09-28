@@ -6,6 +6,9 @@ namespace App\Security;
 
 use App\Http\Session;
 
+/**
+ * CsrfToken voor formulieren;
+ */
 final class CsrfToken
 {
     private const SESSION_KEY = 'csrf_token';

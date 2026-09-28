@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Application;
 
+/**
+ * DTO voor het ophalen een CV bij een sollicitatie;
+ */
 final readonly class StoredCv
 {
     public function __construct(

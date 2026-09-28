@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace App\Application;
 
+/**
+ * Class met all validatie regels voor het aanmaken van een sollicitatie.
+ * Deze waarden worden gebruikt in de frontend validatie, dus je kunt ze
+ * hier wijzigen.
+ */
 final class ApplicationRules
 {
     public const MAX_NAME_LENGTH = 100;

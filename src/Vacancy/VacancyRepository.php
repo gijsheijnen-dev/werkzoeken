@@ -6,6 +6,10 @@ namespace App\Vacancy;
 
 use PDO;
 
+/**
+ * Repository voor de vacatures. In de tabel heb ik een extra veld 'tags' aangemaakt, waar extra
+ * zoektermen kunnen worden geplaatst voor betere vindbaarheid.
+ */
 final readonly class VacancyRepository implements VacancyRepositoryInterface
 {
     private const SELECT_SUMMARY = '
@@ -58,7 +62,7 @@ final readonly class VacancyRepository implements VacancyRepositoryInterface
         $statement = $this->pdo->prepare(self::SELECT_SUMMARY . $this->whereClause($conditions) . self::ORDER_BY);
         $statement->execute($parameters);
 
-        return array_map(VacancySummary::fromRow(...), $statement->fetchAll());
+        return array_map(VacancyOverview::fromRow(...), $statement->fetchAll());
     }
 
     public function findById(int $id): ?VacancyDetail

@@ -6,6 +6,9 @@ namespace App\Http;
 
 use LogicException;
 
+/**
+ * Class om sessies te starten en om te checken of sessies al gestart zijn.
+ */
 final class Session
 {
     public static function start(): void

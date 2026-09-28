@@ -9,6 +9,9 @@ use RuntimeException;
 
 final readonly class CvStorage
 {
+    /**
+     * Alleen lezen voor buitenstaanders en schrijven voor de applicatie;
+     */
     private const FILE_PERMISSIONS = 0640;
 
     public function __construct(private string $directory)
@@ -18,6 +21,14 @@ final readonly class CvStorage
         }
     }
 
+    /**
+     * @param UploadedCv $cv
+     * @return string
+     * @throws \Random\RandomException
+     *
+     * Deze methode creert een unieke filename die gebruikt wordt voor het geuploade bestand. En slaat
+     * vervolgens de pdf op in de juuiste folder met de juiste toegangsrechten.
+     */
     public function store(UploadedCv $cv): string
     {
         $filename = bin2hex(random_bytes(16)) . '.' . ApplicationRules::CV_EXTENSION;

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Vacancy;
 
+/**
+ * Zoek criteria die worden gebruikt in het filter voor de search query;
+ */
 final readonly class VacancySearchCriteria
 {
     public const MAX_LENGTH = 100;

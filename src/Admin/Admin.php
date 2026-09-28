@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Admin;
 
+//Deze class return een DTO van de ingelogde user;
 final readonly class Admin
 {
     public function __construct(
