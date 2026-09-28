@@ -9,7 +9,7 @@ function cameFromOwnSite() {
 }
 
 function handleBackLinkClick(event) {
-    if (!cameFromOwnSite()) {
+    if (cameFromOwnSite() === false) {
         return;
     }
 

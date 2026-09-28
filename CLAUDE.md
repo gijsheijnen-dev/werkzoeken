@@ -78,3 +78,4 @@ Als hosting geen aparte webroot toelaat: zet de niet-publieke mappen dicht met `
 - Voeg bij het opleveren een README toe met setup-instructies (schema + seed importeren, `.env` invullen) en de online URL.
 - Stel per story een implementatieplan op in kleine logische delen. Begin nooit zelf aan een implementatie. Ik moet altijd toestemming geven om te starten met implementeren; Wanneer we naar een volgende stap gaan, leg dan eerst even in 1 zin uit wat die volgende stap ook weer was.
 - Werk met strict typing in alle PHP bestanden;
+- Werk met strict comparison en ontwijk loose comparison.

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use App\Database\ConnectionFactory;
 use App\Database\DatabaseConfig;
+use App\Http\Session;
+use App\Security\CsrfToken;
 use App\Vacancy\VacancyRepository;
 
 $env = require dirname(__DIR__) . '/src/bootstrap.php';
@@ -15,6 +17,9 @@ $vacancy = is_int($id) ? $repository->findById($id) : null;
 
 if ($vacancy === null) {
     http_response_code(404);
+} else {
+    Session::start();
+    $csrfToken = CsrfToken::get();
 }
 
 $templates = dirname(__DIR__) . '/templates';
