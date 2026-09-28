@@ -105,11 +105,15 @@ function initApplyForm() {
     }
 
     const nameField = document.getElementById('apply-name');
+    const emailField = document.getElementById('apply-email');
+    const cvField = document.getElementById('apply-cv');
+    const motivationField = document.getElementById('apply-motivation');
+
     const validators = [
         [nameField, validateName],
-        [document.getElementById('apply-email'), validateEmail],
-        [document.getElementById('apply-cv'), createCvValidator(form)],
-        [document.getElementById('apply-motivation'), validateMotivation],
+        [emailField, validateEmail],
+        [cvField, createCvValidator(form)],
+        [motivationField, validateMotivation],
     ];
 
     function setFormVisible(visible) {
@@ -118,7 +122,12 @@ function initApplyForm() {
     }
 
     function emptyFields(){
-        form.reset();
+        nameField.value = '';
+        emailField.value = '';
+        cvField.value = '';
+        motivationField.value = '';
+
+        validators.forEach(([field]) => showFieldError(field, ''));
     }
 
     openButton.addEventListener('click', () => {
@@ -134,7 +143,6 @@ function initApplyForm() {
 
     cancelButton.addEventListener('click', () => {
         setFormVisible(false);
-        validators.forEach(([field]) => showFieldError(field, ''));
         emptyFields();
         openButton.focus();
     });
@@ -143,9 +151,19 @@ function initApplyForm() {
         field.addEventListener('input', () => showFieldError(field, ''));
     });
 
+    const submitButton = form.querySelector('button[type="submit"]');
+
     form.addEventListener('submit', (event) => {
-        event.preventDefault();
-        validateFields(validators);
+        if (validateFields(validators) === false) {
+            event.preventDefault();
+            return;
+        }
+
+        submitButton.disabled = true;
+    });
+
+    window.addEventListener('pageshow', () => {
+        submitButton.disabled = false;
     });
 }
 

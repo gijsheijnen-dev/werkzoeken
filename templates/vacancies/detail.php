@@ -17,7 +17,17 @@
         </p>
     </section>
 
-    <button type="button" id="apply-button" aria-controls="apply-form" aria-expanded="false">Solliciteer</button>
+    <div id="apply-feedback">
+        <?php if ($successMessage !== null): ?>
+            <p class="alert alert-success" role="status"><?= e($successMessage) ?></p>
+        <?php endif; ?>
+        <?php if ($generalError !== null): ?>
+            <p class="alert alert-error" role="alert"><?= e($generalError) ?></p>
+        <?php endif; ?>
+    </div>
+
+    <button type="button" id="apply-button" aria-controls="apply-form"
+            aria-expanded="<?= $formErrors === [] ? 'false' : 'true' ?>">Solliciteer</button>
 
     <?php require dirname(__DIR__) . '/applications/form.php'; ?>
 </article>

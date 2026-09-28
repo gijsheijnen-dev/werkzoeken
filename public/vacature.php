@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Database\ConnectionFactory;
 use App\Database\DatabaseConfig;
+use App\Http\FlashMessage;
 use App\Http\Session;
 use App\Security\CsrfToken;
 use App\Vacancy\VacancyRepository;
@@ -20,6 +21,10 @@ if ($vacancy === null) {
 } else {
     Session::start();
     $csrfToken = CsrfToken::get();
+    $successMessage = FlashMessage::pull('success');
+    $generalError = FlashMessage::pull('error');
+    $formErrors = FlashMessage::pull('errors') ?? [];
+    $oldInput = FlashMessage::pull('old_input') ?? [];
 }
 
 $templates = dirname(__DIR__) . '/templates';

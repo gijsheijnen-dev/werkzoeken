@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http;
 
+use LogicException;
+
 final class Session
 {
     public static function start(): void
@@ -21,6 +23,13 @@ final class Session
         ]);
 
         session_start();
+    }
+
+    public static function assertStarted(): void
+    {
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            throw new LogicException('A session must be started first.');
+        }
     }
 
     private static function isHttps(): bool
