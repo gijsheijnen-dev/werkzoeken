@@ -23,3 +23,4 @@
 </article>
 
 <script src="/assets/js/back-link.js" defer></script>
+<script src="/assets/js/apply-form.js" defer></script>
