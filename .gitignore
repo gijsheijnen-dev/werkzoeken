@@ -3,3 +3,6 @@
 
 #.idea map hoort bij phpstorm, dus niet in de repo
 .idea/
+
+storage/uploads/*
+!storage/uploads/.gitkeep
