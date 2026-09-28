@@ -17,7 +17,7 @@ final class Env
 
     public static function fromFile(string $path): self
     {
-        if (!is_readable($path)) {
+        if (is_readable($path) === false) {
             throw new RuntimeException(sprintf('Env file "%s" is not readable.', $path));
         }
 
@@ -50,7 +50,7 @@ final class Env
         foreach ($lines as $line) {
             $line = trim($line);
 
-            if ($line === '' || str_starts_with($line, '#') || !str_contains($line, '=')) {
+            if ($line === '' || str_starts_with($line, '#') || str_contains($line, '=') === false) {
                 continue;
             }
 

@@ -29,7 +29,7 @@ final class ErrorHandler
 
     public function handleError(int $severity, string $message, string $file, int $line): bool
     {
-        if (!(error_reporting() & $severity)) {
+        if ((error_reporting() & $severity) === 0) {
             return false;
         }
 
@@ -40,7 +40,7 @@ final class ErrorHandler
     {
         error_log((string) $exception);
 
-        if (!headers_sent()) {
+        if (headers_sent() === false) {
             http_response_code(500);
             header('Content-Type: text/html; charset=UTF-8');
         }

@@ -16,11 +16,11 @@
 <?php if ($applications === []): ?>
     <p>Er zijn nog geen sollicitaties binnengekomen.</p>
 <?php else: ?>
-    <ul class="application-list">
+    <ul class="card-list">
         <?php foreach ($applications as $application): ?>
-            <li class="application-card">
+            <li class="card">
                 <h2><?= e($application->name) ?></h2>
-                <p class="application-meta">
+                <p class="card-meta">
                     <?= e($application->createdAt->format('d-m-Y H:i')) ?> &middot;
                     <a href="<?= e(sprintf('/vacature.php?id=%d', $application->vacancyId)) ?>"><?= e($application->vacancyTitle) ?></a>
                     bij <?= e($application->companyName) ?>

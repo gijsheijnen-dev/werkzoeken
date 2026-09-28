@@ -37,7 +37,7 @@ final readonly class VacancySearchCriteria
 
     private static function normalize(mixed $value): string
     {
-        if (!is_string($value)) {
+        if (is_string($value) === false) {
             return '';
         }
 

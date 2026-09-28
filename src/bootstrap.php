@@ -11,7 +11,7 @@ require __DIR__ . '/helpers.php';
 spl_autoload_register(static function (string $class): void {
     $prefix = 'App\\';
 
-    if (!str_starts_with($class, $prefix)) {
+    if (str_starts_with($class, $prefix) === false) {
         return;
     }
 

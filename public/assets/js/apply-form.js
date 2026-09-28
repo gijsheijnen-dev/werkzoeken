@@ -19,7 +19,7 @@ function validateEmail(input) {
         return 'Vul je e-mailadres in.';
     }
 
-    if (input.validity.typeMismatch) {
+    if (input.validity.typeMismatch === true) {
         return 'Vul een geldig e-mailadres in.';
     }
 
