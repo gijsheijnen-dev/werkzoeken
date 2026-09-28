@@ -11,5 +11,6 @@
 <body>
 <header class="site-header">
     <a href="/">Vacatures</a>
+    <a href="/beheer/inloggen.php">Sollicitaties</a>
 </header>
 <main>

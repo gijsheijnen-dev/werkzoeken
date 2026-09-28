@@ -41,7 +41,7 @@ final readonly class CvStorage
         }
     }
 
-    private function pathFor(string $filename): string
+    public function pathFor(string $filename): string
     {
         //add D-modifier so filenames with \n will be invalidated.
         $pattern = '/^[a-f0-9]{32}\.' . preg_quote(ApplicationRules::CV_EXTENSION, '/') . '$/D';
