@@ -7,7 +7,7 @@ namespace App\Database;
 use App\Config\Env;
 
 /**
- * Via een private constructor dwingen we af dat hij alleen vanuit environment (met een Env class als dependency)
+ * Via een private constructor dwingen we af dat deze class alleen vanuit environment (met een Env class als dependency)
  * aangemaakt kan worden;
  */
 final readonly class DatabaseConfig

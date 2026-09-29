@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Application;
 
 /**
- * Class met all validatie regels voor het aanmaken van een sollicitatie.
- * Deze waarden worden gebruikt in de frontend validatie, dus je kunt ze
+ * Class met alle validatie regels voor het aanmaken van een sollicitatie.
+ * Deze waarden worden gebruikt in de frontend en backend validatie, dus je kunt ze
  * hier wijzigen.
  */
 final class ApplicationRules

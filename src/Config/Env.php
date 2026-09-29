@@ -7,8 +7,7 @@ namespace App\Config;
 use RuntimeException;
 
 /**
- * Parser om .env bestanden met secrets te handlen. Dit zodat we wachtwoorden en
- * dergelijk buiten de repository kunnen houden.
+ * Eigen parser om .env bestanden met secrets te handlen. Dit omdat er geen library gebruikt mag worden.
  */
 final class Env
 {

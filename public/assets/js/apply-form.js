@@ -67,6 +67,10 @@ function validateMotivation(textarea) {
 }
 
 function showFieldError(field, message) {
+    /**
+     * Ik gebruik hier textContent i.p.v. innerHtml, omdat innerHtml als html geparsed wordt en textcontent
+     * gewoon als string;
+     */
     document.getElementById(`${field.id}-error`).textContent = message;
 
     if (message === '') {

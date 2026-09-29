@@ -13,8 +13,8 @@ function e(string $value): string
     return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
-/*
- * Functie die een de eerste x aantal characters van een string toont.
+/**
+ * Functie die de eerste x aantal characters van een string toont.
  */
 function excerpt(string $text, int $maxLength): string
 {

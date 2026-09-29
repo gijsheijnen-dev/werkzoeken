@@ -22,13 +22,13 @@ final readonly class CvStorage
     }
 
     /**
+     * Deze methode creert een unieke filename die gebruikt wordt voor het geuploade bestand. Dit maakt het raden
+     * van de bestandsnaam moeilijker. Daarnaast hoef je bestandsnamen
+     * niet op te hogen met volgnummers wanneer er meerdere dezelfde bestandsnamen worden geupload.
+     *
      * @param UploadedCv $cv
      * @return string
      * @throws \Random\RandomException
-     *
-     * Deze methode creert een unieke filename die gebruikt wordt voor het geuploade bestand. En slaat
-     * vervolgens de pdf op in de juiste folder met de juiste toegangsrechten. Zo hoef je bestandsnamen
-     * niet op te hogen met volgnummers wanneer er meerdere dezelfde bestandsnamen worden geupload.
      */
     public function store(UploadedCv $cv): string
     {
@@ -55,7 +55,9 @@ final readonly class CvStorage
 
     public function pathFor(string $filename): string
     {
-        //add D-modifier so filenames with \n will be invalidated.
+        /**
+         * D-modifier toegevoegd zodat bestandsnamen met \n ongeldig worden.
+         */
         $pattern = '/^[a-f0-9]{32}\.' . preg_quote(ApplicationRules::CV_EXTENSION, '/') . '$/D';
 
         if (preg_match($pattern, $filename) !== 1) {

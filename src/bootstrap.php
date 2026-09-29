@@ -8,7 +8,9 @@ use App\Http\SecurityHeaders;
 
 require __DIR__ . '/helpers.php';
 
-//Simpele autoloader;
+/**
+ * Simpele autoloading omdat composer niet gebruikt mag worden;
+ */
 spl_autoload_register(static function (string $class): void {
     $prefix = 'App\\';
 
@@ -22,7 +24,10 @@ spl_autoload_register(static function (string $class): void {
         require $file;
     }
 });
-
+/**
+ * De errorhandler wordt gestart en zet standaard het tonen van exceptions uit. Zo is er wel error handling
+ * wanneer de .env wordt ingeladen, maar wordt dit wel gelogd.
+ */
 $errorHandler = new ErrorHandler();
 $errorHandler->register();
 

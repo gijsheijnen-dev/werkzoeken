@@ -20,6 +20,9 @@ final class AdminSession
     {
         Session::assertStarted();
 
+        /**
+         * Altijd een nieuw sessionId genereren, zodat oude sessies altijd verloren gaan.
+         */
         session_regenerate_id(true);
 
         $_SESSION[self::SESSION_KEY] = [
@@ -70,13 +73,14 @@ final class AdminSession
     {
         Session::assertStarted();
 
+        /**
+         * Hier geen session_destroy, omdat er nog andere sessies draaien. (Bijvoorbeeld voor FlashMessage)
+         */
         unset($_SESSION[self::SESSION_KEY]);
         session_regenerate_id(true);
     }
 
     /**
-     * Type = nullabel array, omdat een sessie niet altijd defined is.
-     *
      * @param array|null $admin
      * @return bool
      */

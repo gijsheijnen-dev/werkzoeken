@@ -1,4 +1,4 @@
--- Migratie om de database te setuppen. Inclusief username en wachtwoord.
+-- Migratie om de database te setuppen. Inclusief username en hash.
 
 SET NAMES utf8mb4;
 

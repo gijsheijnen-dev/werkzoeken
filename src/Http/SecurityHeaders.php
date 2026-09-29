@@ -6,8 +6,10 @@ namespace App\Http;
 
 /**
  * Security headers die bepaalde ingangen voor aanvallen dichtzetten:
- * bijvoorbeeld geen inline javascripts toe laten, de php versie header verwijderen zodat aanvallers je phpversie
- * niet kunnen achter halen. etc.
+ * X-Content-Type-Options: nosniff zorgt ervoor dat html en javascript in geuploade bestanden niet wordt uitgevoerd.
+ * X-Frame-Options: Geen Iframes toelaten om deze applicatie in te laden;
+ * Referrer-Policy: Alleen referers doorsturen binnen de eigen applicatie; Zo lekken er geen URL's naar andere sites;
+ * Content-Security-Policy: Alleen inladen via eigen domein (geen externe libraries, inline scripts/css etc.)
  */
 final class SecurityHeaders
 {

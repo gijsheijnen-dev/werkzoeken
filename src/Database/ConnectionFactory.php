@@ -8,6 +8,10 @@ use PDO;
 
 final class ConnectionFactory
 {
+    /**
+     * PDO::ERRMODE_EXCEPTION: Zorg ervoor dat PDO een exception geeft als de query mislukt;
+     * PDO::ATTR_EMULATE_PREPARES => false; Zorgt ervoor dat de query apart geparsed wordt van de waarden;
+     */
     private const OPTIONS = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_EMULATE_PREPARES => false,
