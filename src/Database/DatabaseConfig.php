@@ -7,8 +7,8 @@ namespace App\Database;
 use App\Config\Env;
 
 /**
- * Deze class returned een valueObject die gebruikt wordt om de database connectie op te zetten.
- * Via een private constructor dwingen we af dat hij alleen vanuit environment variabelen aangemaakt kan worden;
+ * Via een private constructor dwingen we af dat hij alleen vanuit environment (met een Env class als dependency)
+ * aangemaakt kan worden;
  */
 final readonly class DatabaseConfig
 {

@@ -6,9 +6,6 @@ namespace App\Database;
 
 use PDO;
 
-/**
- * Factory class om de database connectie te creeren;
- */
 final class ConnectionFactory
 {
     private const OPTIONS = [

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Admin;
 
 /**
- * Deze class wordt aangeroepen om blokkades aan te maken.
+ * Deze class wordt gebruikt om mislukte login pogingen bij te houden. Na 5 foutieve inlogs worden logins geblokkeerd.
  */
 final readonly class LoginThrottle
 {

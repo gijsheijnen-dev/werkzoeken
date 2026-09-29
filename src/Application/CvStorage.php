@@ -10,7 +10,7 @@ use RuntimeException;
 final readonly class CvStorage
 {
     /**
-     * Alleen lezen voor buitenstaanders en schrijven voor de applicatie;
+     * Lezen en schrijven voor de eigenaar (applicatie), groepen alleen lezen, buitenstaanders niets.;
      */
     private const FILE_PERMISSIONS = 0640;
 
@@ -27,7 +27,8 @@ final readonly class CvStorage
      * @throws \Random\RandomException
      *
      * Deze methode creert een unieke filename die gebruikt wordt voor het geuploade bestand. En slaat
-     * vervolgens de pdf op in de juuiste folder met de juiste toegangsrechten.
+     * vervolgens de pdf op in de juiste folder met de juiste toegangsrechten. Zo hoef je bestandsnamen
+     * niet op te hogen met volgnummers wanneer er meerdere dezelfde bestandsnamen worden geupload.
      */
     public function store(UploadedCv $cv): string
     {

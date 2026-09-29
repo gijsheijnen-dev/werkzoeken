@@ -6,7 +6,7 @@ namespace App\Http;
 
 /**
  * FlashMessager om resultaten van requests te tonen in de UI. De flash message wordt
- * opgeslagen in een sessie en wanneer hij getoond wordt, wordt de sessie gewist. Hierdoor komt
+ * opgeslagen in een sessie en wanneer hij getoond wordt, wordt de sessie key gewist. Hierdoor komt
  * het resultaat maar 1x in beeld.
  */
 final class FlashMessage
